@@ -20,6 +20,9 @@ public class JwtProvider {
 	@Value("${jwt.expired}")
 	private Long EXPIRED;
 	
+	@Value("${jwt.refresh-token}")
+	private Long REFRESH_EXPIRED;
+	
 	public String generateToken(UserPrincipal userPrincipal) {
 		return Jwts.builder().setSubject(userPrincipal.getUsername())
 				  .setIssuedAt(new Date())
@@ -51,5 +54,31 @@ public class JwtProvider {
 		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
 	}
 	
+	public String generateRefreshToken(UserPrincipal userPrincipal) {
+		return Jwts.builder().setSubject(userPrincipal.getUsername())
+				  .setIssuedAt(new Date())
+				  .setExpiration(new Date(new Date().getTime() + REFRESH_EXPIRED))
+				  .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+				  .compact();
+	}
+	
+	public Boolean isTokenExpired(String token) {
+		try {
+			Claims claims = Jwts.parser()
+					  .setSigningKey(SECRET_KEY)
+					  .parseClaimsJws(token)
+					  .getBody();
+			Date tokenExpired = claims.getExpiration();
+			Date currentDate = new Date();
+			return tokenExpired.before(currentDate);
+		} catch (ExpiredJwtException ex) {
+			throw new RuntimeException("your token is expired");
+		}
+	}
+	
+	public Boolean isTokenValid(String token, UserPrincipal userPrincipal) {
+		String username = getUsernameFromToken(token);
+		return username.equals(userPrincipal.getUsername());
+	}
 	
 }

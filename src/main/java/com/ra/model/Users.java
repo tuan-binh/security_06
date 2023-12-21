@@ -24,8 +24,11 @@ public class Users {
 
     @JsonIgnore
     private String password;
-
-    @ManyToMany
+    
+    private String refreshToken;
+    
+    @ManyToMany(fetch = FetchType.EAGER
+    )
     @JoinTable(
             name = "role_detail",
             joinColumns = @JoinColumn(name = "user_id"),

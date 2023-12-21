@@ -48,7 +48,7 @@ public class WebSecurityConfig {
 				  .csrf(AbstractHttpConfigurer::disable)
 				  .authenticationProvider(authenticationProvider())
 				  .authorizeHttpRequests((auth) ->
-							 auth.requestMatchers("/auth/**").permitAll()
+							 auth.requestMatchers("/auth/**","/upload/**","/**").permitAll()
 										.anyRequest().authenticated())
 				  .exceptionHandling((auth) ->
 							 auth.authenticationEntryPoint(jwtEntryPoint)
