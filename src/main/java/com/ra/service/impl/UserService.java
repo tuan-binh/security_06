@@ -93,7 +93,7 @@ public class UserService implements IUserService {
 		try {
 			authentication = authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword()));
 		} catch (AuthenticationException e) {
-			throw new RuntimeException("Username or Password is incorrect");
+			throw new RuntimeException("Username or Password is incorrect 11312321");
 		}
 		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 		
